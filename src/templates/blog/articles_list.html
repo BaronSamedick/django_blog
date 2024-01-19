@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% for article in articles %}
+        <img src="{{ article.thumbnail.url }}" alt="{{ article.title }}" width="150"/>
+        <strong>{{ article.title }}</strong>
+        <p>{{ article.short_description }}</p>
+        <small>{{ article.time_create }}</small>
+        <hr>
+        <a href="{% url 'articles_detail' article.slug %}">Подробнее</a>
+        <span>{{ article.category.title }}</span>
+    {% endfor %}
+{% endblock %}
