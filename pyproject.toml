@@ -10,6 +10,7 @@ python = "^3.11"
 django = "4.2.8"
 django-mptt = "^0.16.0"
 pillow = "^10.2.0"
+pytils = "^0.4.1"
 
 
 [tool.poetry.group.dev.dependencies]

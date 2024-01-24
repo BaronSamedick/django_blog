@@ -2,7 +2,9 @@
 
 {% block content %}
     {% for article in articles %}
-        <img src="{{ article.thumbnail.url }}" alt="{{ article.title }}" width="150"/>
+        {% if article.thumbnail %}
+            <img src="{{ article.thumbnail.url }}" alt="Превью статьи потерялось" width="150"/>
+        {% endif %}
         <strong>{{ article.title }}</strong>
         <p>{{ article.short_description }}</p>
         <small>{{ article.time_create }}</small>
