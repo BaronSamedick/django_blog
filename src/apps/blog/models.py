@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
+from utils.slug import unique_slugify
 
 User = get_user_model()
 
@@ -41,6 +42,11 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = unique_slugify(self, self.title)
+        super().save(*args, **kwargs)
 
 
 class Category(MPTTModel):
