@@ -2,14 +2,23 @@
 
 {% block content %}
     {% for article in articles %}
-        {% if article.thumbnail %}
-            <img src="{{ article.thumbnail.url }}" alt="Превью статьи потерялось" width="150"/>
-        {% endif %}
-        <strong>{{ article.title }}</strong>
-        <p>{{ article.short_description }}</p>
-        <small>{{ article.time_create }}</small>
-        <hr>
-        <a href="{% url 'articles_detail' article.slug %}">Подробнее</a>
-        <span>{{ article.category.title }}</span>
+        <div class="card mb-3">
+            <div class="row">
+                {% if article.thumbnail %}
+                    <div class="col-4">
+                        <img src="{{ article.thumbnail.url }}" class="card-img-top" alt="Превью статьи потерялось">
+                    </div>
+                {% endif %}
+                <div class="col-8">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ article.title }}</h5>
+                        <div class="card-subtitle">{{ article.author.username }}</div>
+                        <p class="card-text">{{ article.short_description }}</p>
+                        <a href="{% url 'articles_by_category' article.category.slug %}"
+                           class="btn btn-primary">{{ article.category.title }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     {% endfor %}
 {% endblock %}
