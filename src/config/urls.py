@@ -24,6 +24,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("apps.blog.urls")),
     path("", RedirectView.as_view(url="articles/")),
+    path("", include("apps.user.urls")),
 ]
 
 if settings.DEBUG:

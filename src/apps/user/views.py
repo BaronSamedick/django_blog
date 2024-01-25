@@ -1,0 +1,55 @@
+from django.db import transaction
+from django.views.generic import DetailView, UpdateView
+
+from .forms import ProfileUpdateForm, UserUpdateForm
+from .models import Profile
+
+
+class ProfileDetailView(DetailView):
+    """
+    Представление для просмотра профиля
+    """
+
+    model = Profile
+    context_object_name = "profile"
+    template_name = "user/profile_detail.html"
+    queryset = model.objects.all().select_related("user")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = f"Страница пользователя: {self.object.user.username}"
+        return context
+
+
+class ProfileUpdateView(UpdateView):
+    """
+    Представление для редактирования профиля
+    """
+
+    model = Profile
+    form_class = ProfileUpdateForm
+    template_name = "user/profile_edit.html"
+
+    def get_object(self, queryset=None):
+        return self.request.user.profile
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = f"Редактирование профиля пользователя: {self.request.user.username}"
+        if self.request.POST:
+            context["user_form"] = UserUpdateForm(self.request.POST, instance=self.request.user)
+        else:
+            context["user_form"] = UserUpdateForm(instance=self.request.user)
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        user_form = context["user_form"]
+        with transaction.atomic():
+            if all([form.is_valid(), user_form.is_valid()]):
+                user_form.save()
+                form.save()
+            else:
+                context.update({"user_form": user_form})
+                return self.render_to_response(context)
+        return super().form_valid(form)
