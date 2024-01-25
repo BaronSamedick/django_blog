@@ -2,11 +2,14 @@ from django.views.generic import DetailView, ListView
 
 from .models import Article, Category
 
+PAGINATION_SIZE = 5
+
 
 class ArticleListView(ListView):
     model = Article
     template_name = "blog/articles_list.html"
     context_object_name = "articles"
+    paginate_by = PAGINATION_SIZE
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -29,6 +32,7 @@ class ArticleByCategoryListView(ListView):
     model = Article
     template_name = "blog/articles_list.html"
     context_object_name = "articles"
+    paginate_by = PAGINATION_SIZE
     category = None
 
     def get_queryset(self):

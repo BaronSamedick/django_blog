@@ -1,10 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <img src="{{ article.thumbnail.url }}" alt="{{ article.title }}" width="250"/>
+    {% if article.thumbnail %}
+        <img src="{{ article.thumbnail.url }}" alt="{{ article.title }}" width="250"/>
+    {% endif %}
     <strong>{{ article.title }}</strong>
     <p>{{ article.full_description }}</p>
     <small>{{ article.time_create }}</small>
     <hr>
-    <span>{{ article.category.title }}</span>
+    <span>Категория: {{ article.category.title }}</span>
 {% endblock %}
