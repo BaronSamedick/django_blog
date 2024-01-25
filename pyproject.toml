@@ -16,6 +16,7 @@ pytils = "^0.4.1"
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.6.0"
 ruff = "^0.1.13"
+django-debug-toolbar = "^4.2.0"
 
 [tool.ruff]
 line-length = 120
