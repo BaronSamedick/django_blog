@@ -12,6 +12,17 @@ class Article(models.Model):
     Модель постов для блога
     """
 
+    class ArticleManager(models.Manager):
+        """
+        Кастомный менеджер для модели статей
+        """
+
+        def all(self):
+            """
+            Получает все опубликованные статьи
+            """
+            return self.get_queryset().select_related("author", "category").filter(status="published")
+
     STATUS_OPTIONS = (("published", "Опубликовано"), ("draft", "Черновик"))
 
     title = models.CharField(verbose_name="Заголовок", max_length=255)
@@ -32,6 +43,8 @@ class Article(models.Model):
     )
     anchored = models.BooleanField(verbose_name="Закреплено", default=False)
     category = TreeForeignKey("Category", on_delete=models.PROTECT, related_name="articles", verbose_name="Категория")
+
+    objects = ArticleManager()
 
     class Meta:
         db_table = "app_articles"
