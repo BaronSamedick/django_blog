@@ -14,8 +14,8 @@
                         <h5 class="card-title">{{ article.title }}</h5>
                         <div class="card-subtitle">{{ article.author.username }}</div>
                         <p class="card-text">{{ article.short_description }}</p>
-                        <a href="{% url 'articles_by_category' article.category.slug %}"
-                           class="btn btn-primary">{{ article.category.title }}</a>
+                        <a href="{% url 'articles_detail' article.slug %}"
+                           class="btn btn-primary">Читать далее</a>
                     </div>
                 </div>
             </div>
