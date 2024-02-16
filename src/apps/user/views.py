@@ -1,10 +1,10 @@
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import transaction
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, UpdateView
 
-from .forms import ProfileUpdateForm, UserLoginForm, UserRegisterForm, UserUpdateForm
+from .forms import ProfileUpdateForm, UserLoginForm, UserPasswordChangeForm, UserRegisterForm, UserUpdateForm
 from .models import Profile
 
 
@@ -96,3 +96,21 @@ class UserLogoutView(LogoutView):
     """
 
     next_page = "home"
+
+
+class UserPasswordChangeView(SuccessMessageMixin, PasswordChangeView):
+    """
+    Изменение пароля пользователя
+    """
+
+    form_class = UserPasswordChangeForm
+    template_name = "user/user_password_change.html"
+    success_message = "Ваш пароль был успешно изменён!"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Изменение пароля на сайте"
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy("profile_detail", kwargs={"slug": self.request.user.profile.slug})
