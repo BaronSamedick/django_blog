@@ -12,6 +12,9 @@
     {% include 'header.html' %}
     <div class="row">
         <div class="col-8">
+            {% if messages %}
+                {% include 'includes/messages.html' %}
+            {% endif %}
             {% block content %}{% endblock %}
             {% if is_paginated %}
                 {% include 'pagination.html' %}
