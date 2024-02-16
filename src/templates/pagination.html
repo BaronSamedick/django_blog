@@ -1,47 +1,45 @@
-{% if is_paginated %}
-    <nav>
-        <ul class="pagination justify-content-center">
-            {% if page_obj.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page=1">Первая</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Предыдущая</a>
-                </li>
+<nav>
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1">Первая</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Предыдущая</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link">Первая</a>
+            </li>
+            <li class="page-item disabled">
+                <a class="page-link">Предыдущая</a>
+            </li>
+        {% endif %}
+
+        {% for page_number in page_obj.paginator.get_elided_page_range %}
+            {% if page_number == page_obj.paginator.ELLIPSIS %}
+                <li class="page-item"><a class="page-link">{{ page_number }}</a></li>
             {% else %}
-                <li class="page-item disabled">
-                    <a class="page-link">Первая</a>
-                </li>
-                <li class="page-item disabled">
-                    <a class="page-link">Предыдущая</a>
+                <li class="page-item {% if page_number == page_obj.number %}active{% endif %}">
+                    <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
                 </li>
             {% endif %}
+        {% endfor %}
 
-            {% for page_number in page_obj.paginator.get_elided_page_range %}
-                {% if page_number == page_obj.paginator.ELLIPSIS %}
-                    <li class="page-item"><a class="page-link">{{ page_number }}</a></li>
-                {% else %}
-                    <li class="page-item {% if page_number == page_obj.number %}active{% endif %}">
-                        <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
-                    </li>
-                {% endif %}
-            {% endfor %}
-
-            {% if page_obj.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Следующая</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Последняя</a>
-                </li>
-            {% else %}
-                <li class="page-item disabled">
-                    <a class="page-link">Следующая</a>
-                </li>
-                <li class="page-item disabled">
-                    <a class="page-link">Последняя</a>
-                </li>
-            {% endif %}
-        </ul>
-    </nav>
-{% endif %}
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Следующая</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Последняя</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link">Следующая</a>
+            </li>
+            <li class="page-item disabled">
+                <a class="page-link">Последняя</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>

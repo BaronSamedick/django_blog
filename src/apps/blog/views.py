@@ -1,5 +1,7 @@
-from django.views.generic import DetailView, ListView
+from django.urls import reverse, reverse_lazy
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
+from .forms import ArticleCreateForm, ArticleUpdateForm
 from .models import Article, Category
 
 PAGINATION_SIZE = 5
@@ -43,4 +45,67 @@ class ArticleByCategoryListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = f"Статьи из категории: {self.category.title}"
+        return context
+
+
+class ArticleCreateView(CreateView):
+    """
+    Представление: создание материалов на сайте
+    """
+
+    model = Article
+    template_name = "blog/articles_create.html"
+    form_class = ArticleCreateForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Добавление статьи на сайт"
+        return context
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("articles_detail", kwargs={"slug": self.object.slug})
+
+
+class ArticleUpdateView(UpdateView):
+    """
+    Представление: обновления материала на сайте
+    """
+
+    model = Article
+    template_name = "blog/articles_update.html"
+    context_object_name = "article"
+    form_class = ArticleUpdateForm
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = f"Обновление статьи: {self.object.title}"
+        return context
+
+    def form_valid(self, form):
+        form.instance.updater = self.request.user
+        form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("articles_detail", kwargs={"slug": self.object.slug})
+
+
+class ArticleDeleteView(DeleteView):
+    """
+    Представление: удаления материала
+    """
+
+    model = Article
+    success_url = reverse_lazy("home")
+    context_object_name = "article"
+    template_name = "blog/articles_delete.html"
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = f"Удаление статьи: {self.object.title}"
         return context

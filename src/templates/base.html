@@ -13,7 +13,9 @@
     <div class="row">
         <div class="col-8">
             {% block content %}{% endblock %}
-            {% include 'pagination.html' %}
+            {% if is_paginated %}
+                {% include 'pagination.html' %}
+            {% endif %}
         </div>
         <div class="col-4">
             {% include 'sidebar.html' %}
