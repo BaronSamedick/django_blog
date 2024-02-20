@@ -1,6 +1,7 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm, SetPasswordForm, UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, SetPasswordForm, UserCreationForm
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 
 from .models import Profile
 
@@ -105,6 +106,41 @@ class UserLoginForm(AuthenticationForm):
 class UserPasswordChangeForm(SetPasswordForm):
     """
     Форма изменения пароля
+    """
+
+    def __init__(self, *args, **kwargs):
+        """
+        Обновление стилей формы
+        """
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs.update({"class": "form-control", "autocomplete": "off"})
+
+
+class UserForgotPasswordForm(PasswordResetForm):
+    """
+    Запрос на восстановление пароля
+    """
+
+    def __init__(self, *args, **kwargs):
+        """
+        Обновление стилей формы
+        """
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs.update({"class": "form-control", "autocomplete": "off"})
+
+    def clean_email(self):
+        email = self.cleaned_data["email"]
+        if not User.objects.filter(email__iexact=email, is_active=True).exists():
+            raise ValidationError("Пользователь с указанным адресом электронной почты не зарегистрирован")
+
+        return email
+
+
+class UserSetNewPasswordForm(SetPasswordForm):
+    """
+    Изменение пароля пользователя после подтверждения
     """
 
     def __init__(self, *args, **kwargs):
